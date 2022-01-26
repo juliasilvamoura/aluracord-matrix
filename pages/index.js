@@ -1,37 +1,8 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components';
+import React from 'react';
+import { useRouter} from 'next/router';
 import appConfig from '../config.json';
 
-function GlobalStyle(){
-    // O * diz que queremos tudo
-    // o App fit Height resolve só com CSS o BO da tela não ficar 100%, ajuste de altura
-    return(
-        <style global jsx>{`
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        list-style: none;
-      }
-      body {
-        font-family: 'Open Sans', sans-serif, Arial;
-      }
-      /* App fit Height */ 
-      html, body, #__next {
-        min-height: 100vh;
-        display: flex;
-        flex: 1;
-      }
-      #__next {
-        flex: 1;
-      }
-      #__next > * {
-        flex: 1;
-      }
-      /* ./App fit Height */ 
-    `}</style>
-
-    );
-}
 
 function Title(props){
     // console.log(props.children); // imprime o que tem no props que é o argumento dentro de <Title> argumento </Title>
@@ -51,7 +22,6 @@ function Title(props){
     </> // uma tag fantasma pra não dar erro no style
     );
 }
-
 
 /*
 // Componente React
@@ -76,11 +46,14 @@ function HomePage() {
   */
   
   export default function PaginaInicial() {
-    const username = 'juliasilvamoura';
+    //const username = 'juliasilvamoura';
+    // usando o State do react ele da tanto o valor quando uma função set desse valor
+    //const [username, setUsername] = React.useState('');
+    const [username, setUsername] = React.useState(''); //use alguma coisa é um gancho para fazer algo no react
+    const roteamento = useRouter();
   
     return (
       <>
-        <GlobalStyle />
         <Box
           styleSheet={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -104,9 +77,23 @@ function HomePage() {
               backgroundColor: appConfig.theme.colors.neutrals[700],
             }}
           >
-            {/* Formulário */}
+              
+            {/* 
+            Formulário - como trabalha dentro de uma tag de formulario a tendencia é dar um refresh na página ao clicar em entrar
+            Como se fosse buscar algo no banco 
+            */}
+
+
             <Box
               as="form"
+              onSubmit={function (infosDoEvento){ // esse onSubmit é sempre que tem uma submissão ele faz alguma coisa
+                infosDoEvento.preventDefault(); // previne o recarregamento total da página
+                //Para mudar de página - vamos para a página do chat
+                // FORMA 1 MUDAR DE PAGINA - window.location.href='/chat';
+                // next gerencia a parte de roteamento de paginas
+                // FORMA 2 MUDAR DE PAGINA usando o NEXT
+                roteamento.push ('/chat') 
+              }}
               styleSheet={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -116,8 +103,34 @@ function HomePage() {
               <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
                 {appConfig.name}
               </Text>
-  
+
+{/* 
+Pra praticar e mostrar o username 
+              <input 
+              type="text"
+              value={username}
+              onChange={function (event){
+                  //Quer trocar o valor da variavel e deve receber esse valor
+                  const valor = event.target.value;
+                  //Troca o valor através do react, e altera em 3 lugares diferentes que usa a variavel que está mudando
+                  // se atualizar a variavel direto como é uma const ela não irá alterar e dará um erro (ideia do set e get)
+                  setUsername(valor);
+              }}
+              />
+              */}
+
+              
               <TextField
+              value={username}
+              // onChange sempre que tem alguma alteração ele faz uma submissão
+              onChange={function (event){
+                  const valor = event.target.value;
+                  // explicação bloco input
+                  setUsername(valor);
+                  
+              }}
+
+              // Estilo do campo input 
                 fullWidth
                 textFieldColors={{
                   neutral: {
@@ -128,6 +141,8 @@ function HomePage() {
                   },
                 }}
               />
+            
+
               <Button
                 type='submit'
                 label='Entrar'
@@ -166,6 +181,8 @@ function HomePage() {
                 }}
                 src={`https://github.com/${username}.png`}
               />
+
+              {/* Text do nome que aparece abaixo da foto */}
               <Text
                 variant="body4"
                 styleSheet={{
