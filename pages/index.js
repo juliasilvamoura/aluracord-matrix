@@ -92,7 +92,8 @@ function HomePage() {
                 // FORMA 1 MUDAR DE PAGINA - window.location.href='/chat';
                 // next gerencia a parte de roteamento de paginas
                 // FORMA 2 MUDAR DE PAGINA usando o NEXT
-                roteamento.push ('/chat') 
+                roteamento.push (`/chat?username=${username}`); // ? serve para concatenar
+                // roteamento.push ('/chat?username='+ username);
               }}
               styleSheet={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
